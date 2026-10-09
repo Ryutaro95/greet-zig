@@ -1,7 +1,7 @@
 const std = @import("std");
 const cli = @import("cli.zig");
 
-pub fn hello(options: []const cli.Option) bool {
+pub fn hello(options: []const cli.Option) !void {
     var name: []const u8 = "World";
     var greeting: []const u8 = "";
 
@@ -16,8 +16,7 @@ pub fn hello(options: []const cli.Option) bool {
     }
 
     if (greeting.len == 0) {
-        std.debug.print("Greeting must not be empty.\n", .{});
-        return false;
+        return error.EmtpyGreeting;
     }
 
     cli.printColored(
@@ -25,10 +24,9 @@ pub fn hello(options: []const cli.Option) bool {
         "{s}, {s}!\n",
         .{ greeting, name },
     );
-    return true;
 }
 
-pub fn help(_: []const cli.Option) bool {
+pub fn help(_: []const cli.Option) !void {
     std.debug.print(
         \\Usage: hello_zig <command> [options]
         \\
@@ -41,24 +39,22 @@ pub fn help(_: []const cli.Option) bool {
         \\  -n, --name <value>       Name to greet
         \\
     , .{});
-
-    return true;
 }
 
-pub fn userCreate(options: []const cli.Option) bool {
+pub fn userCreate(options: []const cli.Option) !void {
     for (options) |opt| {
         if (std.mem.eql(u8, opt.name, "name")) {
             if (opt.value.len == 0) {
-                std.debug.print("Name mut not be empty.\n", .{});
-                return false;
+                return error.EmptyName;
             }
 
             std.debug.print(
                 "Creating user: {s}\n",
                 .{opt.value},
             );
-            return true;
+            return;
         }
     }
-    return false;
+
+    return cli.Error.MissingRequiredOption;
 }

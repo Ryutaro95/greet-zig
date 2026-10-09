@@ -13,7 +13,7 @@ pub const Command = struct {
     req: Slices = &.{},
     opt: Slices = &.{},
 
-    const FnType = *const fn ([]const Option) bool;
+    const FnType = *const fn ([]const Option) anyerror!void;
 };
 
 pub const Option = struct {
@@ -23,7 +23,7 @@ pub const Option = struct {
     long: Slice,
     value: Slice = "",
 
-    const FnType = *const fn (Slice) bool;
+    const FnType = *const fn (Slice) anyerror!void;
 };
 
 pub const Error = error{
@@ -32,7 +32,6 @@ pub const Error = error{
     UnknownOption, // 未登録のオプションを指定した
     MissingRequiredOption, // 必須オプションが足りない
     UnexpectedArgument, // 想定してない引数がある
-    CommandExecutionFailed, // コマンドの処理に失敗した
     TooManyCommands, // 登録したコマンド数が上限を超えた
     TooManyOptions, // オプション数が上限を超えた
 };
@@ -144,15 +143,22 @@ pub fn startWithArgs(
         }
     }
 
-    if (!cmd.func(used_options)) {
-        return Error.CommandExecutionFailed;
-    }
+    // if (!cmd.func(used_options)) {
+    //     return Error.CommandExecutionFailed;
+    // }
+    //
+    // for (used_options) |opt| {
+    //     if (opt.func) |func| {
+    //         if (!func(opt.value)) {
+    //             return Error.CommandExecutionFailed;
+    //         }
+    //     }
+    // }
+    try cmd.func(used_options);
 
     for (used_options) |opt| {
         if (opt.func) |func| {
-            if (!func(opt.value)) {
-                return Error.CommandExecutionFailed;
-            }
+            try func(opt.value);
         }
     }
 }
