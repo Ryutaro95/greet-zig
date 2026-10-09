@@ -28,7 +28,7 @@ pub fn hello(options: []const cli.Option) !void {
 
 pub fn help(_: []const cli.Option) !void {
     std.debug.print(
-        \\Usage: hello_zig <command> [options]
+        \\Usage: greet-zig <command> [options]
         \\
         \\Commands:
         \\  hello         Greeting someone
