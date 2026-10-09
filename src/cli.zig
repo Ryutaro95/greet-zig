@@ -183,3 +183,25 @@ pub fn printColored(
         .{color.ansiCode()} ++ args ++ .{Color.reset.ansiCode()},
     );
 }
+
+pub const Spinner = struct {
+    message: []const u8,
+    current: usize = 0,
+    frames: []const []const u8 = &.{ "|", "/", "-", "\\" },
+
+    pub fn tick(self: *Spinner) void {
+        std.debug.print(
+            "\r\x1b[2K{s} {s}",
+            .{ self.frames[self.current], self.message },
+        );
+
+        self.current = (self.current + 1) % self.frames.len;
+    }
+
+    pub fn stop(self: *const Spinner) void {
+        std.debug.print(
+            "\r\x1b[2KDone: {s}\n",
+            .{self.message},
+        );
+    }
+};
