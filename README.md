@@ -52,14 +52,14 @@ zig run src/main.zig -- hello -g Hi -n Alice
 zig build run -- hello --greeting Hi --name Alice
 # Hi, Alice!
 
-zig build run -- hello -g こんにちは -n 竹村
-# こんにちは, 竹村!
+zig build run -- hello -g こんにちは -n Ryutaro
+# こんにちは, Ryutaro!
 
 zig build run -- hello --greeting Hi
 # Hi, World!
 
-zig build run -- hello --greeting こんにちは --name "竹村 隆太郎"
-# こんにちは, 竹村 隆太郎!
+zig build run -- hello --greeting こんにちは --name "Ryutaro"
+# こんにちは, Ryutaro!
 
 zig build run -- hello -g "Good morning" -n "Alice Smith"
 # Good morning, Alice Smith!
